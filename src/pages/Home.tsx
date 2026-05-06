@@ -186,7 +186,7 @@ export default function Home() {
                         <Target className="w-5 h-5" />
                       </div>
                       <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
-                        المطلوب / احتلال القلعة <span className="font-bold text-orange-400 ml-1">ساعتين ونصف</span>
+                        <span className="font-bold text-orange-400">المطلوب ساعتين ونصف</span>
                       </p>
                     </div>
                   </div>
@@ -281,6 +281,59 @@ export default function Home() {
                   </div>
                 </motion.div>
 
+                {/* رسم بياني لتمركز اللاعبين */}
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-8 relative drop-shadow-md text-center">رسم بياني لتمركز اللاعبين</h2>
+                  
+                  <div className="relative w-full h-[400px] sm:h-[480px] bg-[#121316]/80 rounded-2xl border border-white/5 mx-auto max-w-2xl shadow-inner overflow-hidden">
+                    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                    
+                    {/* Castle */}
+                    <div className="absolute top-[40%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 sm:w-32 sm:h-32 bg-emerald-950/80 border-2 border-emerald-500 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] flex flex-col items-center justify-center z-10 transition-transform hover:scale-105">
+                      <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-emerald-400 mb-1 sm:mb-2 drop-shadow-lg" />
+                      <span className="text-emerald-100 font-bold text-[10px] sm:text-sm">قلعة الملك</span>
+                    </div>
+
+                    {/* Towers */}
+                    <div className="absolute top-[10%] right-[8%] sm:right-[15%] w-14 h-14 sm:w-20 sm:h-20 bg-blue-950/80 border-2 border-blue-500/50 rounded-lg flex flex-col items-center justify-center z-10 shadow-lg">
+                      <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-blue-400 mb-1" />
+                      <span className="text-blue-100 font-bold text-[8px] sm:text-xs text-center leading-tight">البرج<br/>الشمالي</span>
+                    </div>
+                    <div className="absolute top-[10%] left-[8%] sm:left-[15%] w-14 h-14 sm:w-20 sm:h-20 bg-orange-950/80 border-2 border-orange-500/50 rounded-lg flex flex-col items-center justify-center z-10 shadow-lg">
+                      <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-orange-400 mb-1" />
+                      <span className="text-orange-100 font-bold text-[8px] sm:text-xs text-center leading-tight">البرج<br/>الغربي</span>
+                    </div>
+                    <div className="absolute top-[55%] right-[8%] sm:right-[15%] w-14 h-14 sm:w-20 sm:h-20 bg-red-950/80 border-2 border-red-500/50 rounded-lg flex flex-col items-center justify-center z-10 shadow-lg">
+                      <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-red-400 mb-1" />
+                      <span className="text-red-100 font-bold text-[8px] sm:text-xs text-center leading-tight">البرج<br/>الشرقي</span>
+                    </div>
+                    <div className="absolute top-[55%] left-[8%] sm:left-[15%] w-14 h-14 sm:w-20 sm:h-20 bg-purple-950/80 border-2 border-purple-500/50 rounded-lg flex flex-col items-center justify-center z-10 shadow-lg">
+                      <Shield className="w-4 h-4 sm:w-6 sm:h-6 text-purple-400 mb-1" />
+                      <span className="text-purple-100 font-bold text-[8px] sm:text-xs text-center leading-tight">البرج<br/>الجنوبي</span>
+                    </div>
+
+                    {/* Players */}
+                    <div className="absolute bottom-4 sm:bottom-6 w-full flex justify-center z-20">
+                      <div className="grid grid-cols-6 gap-1 w-max max-w-[95%] px-1">
+                        {warLeaders.map((leader, i) => (
+                          <CharacterCard key={i} name={leader.name} gradient={leader.gradient} size="small" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -312,11 +365,12 @@ export default function Home() {
                       <div className="p-2 sm:p-3 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
                         <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <h4 className="text-lg sm:text-xl font-bold text-orange-100 mb-1">الخط الثاني</h4>
                         <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                          يتمركز <span className="font-bold text-orange-400">قوات مستوى 8/9</span> (تدعيم الأبراج).
+                          يتمركز <span className="font-bold text-orange-400">قوات مستوى 8/9</span>
                         </p>
+                        <span className="text-xs text-gray-500 mt-1">(تدعيم الأبراج).</span>
                       </div>
                     </div>
 
@@ -324,11 +378,12 @@ export default function Home() {
                       <div className="p-2 sm:p-3 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
                         <Target className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <div>
+                      <div className="flex flex-col">
                         <h4 className="text-lg sm:text-xl font-bold text-cyan-100 mb-1">الخط الثالث</h4>
                         <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                          بالخلف <span className="font-bold text-cyan-400">قوات المستوى 8</span>، عند الحاجة فقط يدخلون الأبراج.
+                          بالخلف <span className="font-bold text-cyan-400">قوات المستوى 8</span>
                         </p>
+                        <span className="text-xs text-gray-500 mt-1">عند الحاجة فقط يدخلون الأبراج.</span>
                       </div>
                     </div>
                   </div>
@@ -389,10 +444,33 @@ export default function Home() {
                     <div className="p-2 sm:p-3 rounded-lg bg-red-500/20 text-red-500 shrink-0 mt-1 shadow-[0_0_15px_rgba(239,68,68,0.3)]">
                       <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div>
-                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
-                        الحذر من خبث <span className="font-bold text-red-400">تحالف DSN</span> ومحاولة تشتيت الإنتباه من خلال التجسس او الهجوم من خلال جندي واحد او صنع رالي على قادة الحرب ، <span className="text-red-300">جميع ما سيحدث من هذا هو هجوم وهمي لتشتيت الإنتباه ، لا يجب النظر اليه او القلق حياله.</span>
-                      </p>
+                    <div className="w-full">
+                      <ul className="space-y-3">
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                          <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                            الحذر من خبث <span className="font-bold text-red-400">تحالف DSN</span> ومحاولة تشتيت الإنتباه.
+                          </p>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                          <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                            من خلال التجسس أو الهجوم من خلال جندي واحد أو صنع رالي على قادة الحرب.
+                          </p>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                          <p className="text-sm sm:text-base text-red-300 leading-relaxed font-medium">
+                            جميع ما سيحدث من هذا هو هجوم وهمي لتشتيت الإنتباه.
+                          </p>
+                        </li>
+                        <li className="flex items-start gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                          <p className="text-sm sm:text-base text-red-300 leading-relaxed font-medium">
+                            لا يجب النظر إليه أو القلق حياله.
+                          </p>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </motion.div>
