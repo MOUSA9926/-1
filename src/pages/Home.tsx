@@ -1,0 +1,973 @@
+import { motion } from "motion/react";
+import { Shield, Clock, Target, Crown, Building2, Users, Swords, Zap, AlertTriangle, ArrowDown } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { WolfEye, BackgroundTheme } from "../components/BackgroundTheme";
+
+const kingsLeaders = ["بيرسيفال", "no time"];
+const towerLeaders = ["云公馆", "보단이"];
+const mainSupporters = ["LanceHiro", "Venus S2", "stratusjmd", "Avatar", "Ally", "ゆきちゃん", "Jharoth"];
+
+const warLeaders = [
+  { name: "云公馆", gradient: "from-orange-500 to-orange-700" },
+  { name: "LanceHiro", gradient: "from-gray-600 to-gray-800" },
+  { name: "no time", gradient: "from-cyan-500 to-cyan-700" },
+  { name: "بيرسيفال", gradient: "from-cyan-500 to-cyan-700" },
+  { name: "Venus S2", gradient: "from-gray-600 to-gray-800" },
+  { name: "보단이", gradient: "from-orange-500 to-orange-700" },
+];
+
+const characterAvatars: Record<string, string> = {
+  "no time": "https://got-global-avatar.akamaized.net/avatar/2026/04/20/z5ZJ8y_1776714284.png",
+  "بيرسيفال": "https://got-global-avatar.akamaized.net/avatar/2026/03/26/gKzvoG_1774564335.png",
+  "LanceHiro": "https://got-global-avatar.akamaized.net/avatar/2026/05/06/gKmyYG_1778025634.png",
+  "Avatar": "https://got-global-avatar.akamaized.net/avatar/2026/04/07/pKMBky_1775547583.png",
+  "Venus S2": "https://got-global-avatar.akamaized.net/avatar/2026/03/26/m6vZ8p_1774542997.png",
+  "ゆきちゃん": "https://got-global-avatar.akamaized.net/avatar/2026/04/13/XwNqnv_1776104565.png",
+  "Jharoth": "https://got-global-avatar.akamaized.net/avatar/2026/05/04/lLrgvM_1777925249.png",
+  "云公馆": "https://got-global-avatar.akamaized.net/avatar/2026/03/24/m6vkYO_1774349810.png",
+  "보단이": "https://got-global-avatar.akamaized.net/avatar/2026/03/23/oKL14K_1774259025.png",
+  "بو دان": "https://got-global-avatar.akamaized.net/avatar/2026/03/23/oKL14K_1774259025.png", // just keeping existing structure if needed, the lines above have "보단이" etc.
+  "Ally": "https://got-global-avatar.akamaized.net/avatar/2026/03/28/6yO5VN_1774724294.png",
+  "Ymfalex115": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "stratusjmd": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "تشينكو": "https://www.kingshotguide.org/images/heroes/chenko.webp",
+  "هاورد": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2025/10/%E7%B4%AB%E3%80%90.png",
+  "جورودن": "https://www.allclash.com/wp-content/uploads/2025/03/Screenshot-111.png"
+};
+
+const pieData = [
+  { name: 'مشاة', value: 60, color: '#3b82f6' }, // blue-500
+  { name: 'فرسان', value: 40, color: '#f97316' }, // orange-500
+];
+
+
+const CharacterCard = ({ name, gradient, size = "normal" }: { name: string, gradient: string, size?: "normal" | "small" }) => {
+  const initial = typeof name === 'string' && name.length > 0 ? name[0] : '?';
+  const avatarUrl = characterAvatars[name];
+  
+  if (size === "small") {
+    return (
+      <div className="flex flex-col items-center gap-1 p-1 sm:p-2 bg-white/5 rounded-lg border border-white/10 hover:bg-white/10 transition-colors duration-300 w-full shrink-0">
+        <div className={`w-8 h-8 sm:w-11 sm:h-11 rounded-[10px] bg-gradient-to-br ${gradient} flex items-center justify-center shadow-md border border-white/20 overflow-hidden`}>
+          {avatarUrl ? (
+            <img src={avatarUrl} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+          ) : (
+            <span className="text-sm sm:text-lg font-bold text-white drop-shadow-md">{initial.toUpperCase()}</span>
+          )}
+        </div>
+        <span className="text-[9px] sm:text-xs text-center font-medium text-gray-200 truncate w-full px-0.5" title={name}>{name}</span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-center gap-1.5 p-2.5 bg-white/5 rounded-xl border border-white/10 hover:bg-white/10 transition-colors duration-300 w-[80px] sm:w-[90px] shrink-0">
+      <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br ${gradient} flex items-center justify-center shadow-lg border border-white/20 overflow-hidden`}>
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+        ) : (
+          <span className="text-lg sm:text-xl font-bold text-white drop-shadow-md">{initial.toUpperCase()}</span>
+        )}
+      </div>
+      <span className="text-[11px] sm:text-xs text-center font-medium text-gray-200 truncate w-full" title={name}>{name}</span>
+    </div>
+  );
+};
+
+const HeroCard = ({ name }: { name: string }) => {
+  const avatarUrl = characterAvatars[name];
+  
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 p-3 bg-[#121316] rounded-2xl border border-white/5 w-[90px] h-[90px] sm:w-[110px] sm:h-[110px] shrink-0 shadow-lg hover:bg-[#16181b] transition-colors duration-300">
+      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-dashed border-gray-600/70 flex items-center justify-center ${avatarUrl ? 'bg-transparent overflow-hidden border-none' : 'bg-transparent'} shrink-0`}>
+        {avatarUrl ? (
+          <img src={avatarUrl} alt={name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+        ) : (
+          <Users className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" strokeWidth={1.5} />
+        )}
+      </div>
+      <span className="text-sm sm:text-base font-bold text-white drop-shadow-md">{name}</span>
+    </div>
+  );
+};
+
+export default function Home() {
+  return (
+    <BackgroundTheme>
+      <main className="min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pb-20 pt-16 sm:pt-24 lg:pt-32">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center flex flex-col items-center h-full w-full">
+          <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+          >
+            {/* Eyes and Shield Section */}
+            <div className="flex items-center justify-center gap-2 sm:gap-6 md:gap-14 mb-8 w-full max-w-4xl mx-auto" dir="ltr">
+              <div className="translate-y-4 sm:translate-y-8 md:translate-y-12">
+                <WolfEye theme="ice" position="left" />
+              </div>
+              
+              <div className="flex items-center justify-center h-28 w-28 sm:h-36 sm:w-36 md:h-44 md:w-44 rounded-full bg-black/40 border border-white/10 backdrop-blur-md relative overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] z-10 mx-2 sm:mx-6">
+                <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-orange-500/20" />
+                <div className="absolute left-0 top-0 bottom-0 w-1/2 bg-cyan-500/20" />
+                <Shield className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+              </div>
+
+              <div className="translate-y-4 sm:translate-y-8 md:translate-y-12">
+                <WolfEye theme="fire" position="right" />
+              </div>
+            </div>
+            
+            {/* Title Section */}
+            <div className="flex flex-col items-center justify-center relative">
+              <div className="relative inline-block" dir="ltr">
+                <div 
+                  className="absolute inset-0 text-7xl sm:text-8xl md:text-[10rem] font-black tracking-wider select-none text-transparent bg-clip-text blur-2xl opacity-70"
+                  style={{ backgroundImage: 'linear-gradient(to right, #22d3ee, #ffffff, #f97316)' }}
+                  aria-hidden="true"
+                >
+                  BiGDARK
+                </div>
+                <h1 
+                  className="relative text-7xl sm:text-8xl md:text-[10rem] font-black tracking-wider drop-shadow-md select-none text-transparent bg-clip-text"
+                  style={{ backgroundImage: 'linear-gradient(to right, #22d3ee, #ffffff, #f97316)' }}
+                >
+                  BiGDARK
+                </h1>
+                <span className="hidden md:block absolute bottom-0 -right-24 text-4xl sm:text-5xl font-mono text-gray-400 opacity-80 italic translate-y-[-20%] drop-shadow-sm">
+                  1837
+                </span>
+              </div>
+              
+              <div className="text-xl sm:text-3xl md:text-4xl font-bold uppercase tracking-[0.6em] sm:tracking-[0.8em] mt-6 text-white/90 drop-shadow-md">
+                ALLIANCE
+              </div>
+
+              <div className="md:hidden text-xl font-mono text-gray-400 opacity-80 italic mt-4">
+                1837
+              </div>
+
+              <div className="mt-16 sm:mt-24 relative flex flex-col items-center w-full">
+                <div className="relative inline-block">
+                  <div className="text-2xl sm:text-3xl md:text-5xl whitespace-nowrap font-black text-white pb-3 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" dir="rtl">
+                    خطة معركة قلعة الملك
+                  </div>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_12px_2px_rgba(34,211,238,0.6)]" />
+                </div>
+                
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="mt-12 w-full max-w-md mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-6 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  {/* Decorative background glow */}
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-cyan-500/10 via-transparent to-orange-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  {/* Decorative border gradients */}
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-5 relative drop-shadow-md text-center sm:text-right">المقدمة</h2>
+                  
+                  <div className="space-y-3 relative">
+                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                        <Clock className="w-5 h-5" />
+                      </div>
+                      <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
+                        المعركة تستمر <span className="font-bold text-cyan-400 ml-1">5 ساعات</span>
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2.5 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                        <Target className="w-5 h-5" />
+                      </div>
+                      <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
+                        المطلوب / احتلال القلعة <span className="font-bold text-orange-400 ml-1">ساعتين ونصف</span>
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.4 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-orange-500/10 via-transparent to-cyan-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-8 relative drop-shadow-md text-center sm:text-right">التشكيل الأساسي</h2>
+                  
+                  <div className="space-y-8 relative">
+                    {/* section 1 */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
+                        <Crown className="w-5 h-5 text-cyan-400" />
+                        <h3 className="text-lg font-bold text-cyan-50">قادة قلعة الملك</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+                        {kingsLeaders.map(name => (
+                          <CharacterCard key={name} name={name} gradient="from-cyan-500 to-cyan-700" />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* section 2 */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
+                        <Building2 className="w-5 h-5 text-orange-400" />
+                        <h3 className="text-lg font-bold text-orange-50">قادة الأبراج</h3>
+                      </div>
+                      <div className="flex flex-wrap gap-3 justify-center sm:justify-start">
+                        {towerLeaders.map(name => (
+                          <CharacterCard key={name} name={name} gradient="from-orange-500 to-orange-700" />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* section 3 */}
+                    <div>
+                      <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
+                        <Users className="w-5 h-5 text-gray-400" />
+                        <h3 className="text-lg font-bold text-gray-100">داعمين قلعة الملك الأساسي</h3>
+                      </div>
+                      <div className="grid grid-cols-3 gap-3 w-fit mx-auto sm:mx-0">
+                        {mainSupporters.map(name => (
+                          <CharacterCard key={name} name={name} gradient="from-gray-600 to-gray-800" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-cyan-500/10 via-transparent to-orange-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-8 relative drop-shadow-md text-center">توزيع أماكن اللاعبين</h2>
+                  
+                  <div className="relative flex flex-col items-center">
+                    <div className="w-full">
+                      <div className="flex flex-col items-center gap-3 mb-6">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-100 text-sm font-bold shadow-[0_0_10px_rgba(34,211,238,0.1)]">
+                          <Swords className="w-4 h-4 text-cyan-400" />
+                          <span>في المقدمة 6 مقاعد (قادة الحرب)</span>
+                        </div>
+                        <p className="text-xs sm:text-sm text-gray-400">بيرسيفال و no time في المنتصف</p>
+                      </div>
+                      
+                      <div className="grid grid-cols-6 gap-1 sm:gap-3 w-full max-w-2xl mx-auto">
+                        {warLeaders.map((leader, i) => (
+                          <CharacterCard key={i} name={leader.name} gradient={leader.gradient} size="small" />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.8 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-purple-500/10 via-transparent to-pink-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">تمركز القوات</h2>
+                  
+                  <div className="space-y-4 relative">
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-red-500/20 text-red-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                        <Swords className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg sm:text-xl font-bold text-red-100 mb-1">خلف قادة الحرب</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                          يتمركز قلاع من يمتلك <span className="font-bold text-red-400">قوات مستوى 9/10</span>، حيث هم الوحيدون من يدخلون قلعة الملك.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                        <Shield className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg sm:text-xl font-bold text-orange-100 mb-1">الخط الثاني</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                          يتمركز <span className="font-bold text-orange-400">قوات مستوى 8/9</span> (تدعيم الأبراج).
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                        <Target className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg sm:text-xl font-bold text-cyan-100 mb-1">الخط الثالث</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                          بالخلف <span className="font-bold text-cyan-400">قوات المستوى 8</span>، عند الحاجة فقط يدخلون الأبراج.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.0 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-blue-500/10 via-transparent to-cyan-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">تجهيز القوة</h2>
+                  
+                  <div className="flex flex-col gap-6 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300 relative">
+                    <div className="flex items-start gap-4">
+                      <div className="p-2 sm:p-3 rounded-lg bg-blue-500/20 text-blue-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                        <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed mt-1">
+                          قادة الحرب ومن يمكنه على تشغيل بافات تعزيز القوة وخفض قوة العدو <span className="font-bold text-blue-400">يجب تشغيل ذلك</span> لزيادة قدرتنا للهجوم والدفاع.
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap justify-center gap-4 pt-4 border-t border-white/10">
+                      {kingsLeaders.map(name => (
+                        <CharacterCard key={name} name={name} gradient="from-cyan-500 to-cyan-700" />
+                      ))}
+                      {towerLeaders.map(name => (
+                        <CharacterCard key={name} name={name} gradient="from-orange-500 to-orange-700" />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.2 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-red-950/30 border border-red-500/20 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-red-600/10 via-transparent to-orange-600/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">تنبيه حصار</h2>
+                  
+                  <div className="flex items-start gap-4 bg-red-500/5 rounded-xl p-4 sm:p-5 border border-red-500/10 hover:bg-red-500/10 transition-colors duration-300 relative">
+                    <div className="p-2 sm:p-3 rounded-lg bg-red-500/20 text-red-500 shrink-0 mt-1 shadow-[0_0_15px_rgba(239,68,68,0.3)]">
+                      <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                        الحذر من خبث <span className="font-bold text-red-400">تحالف DSN</span> ومحاولة تشتيت الإنتباه من خلال التجسس او الهجوم من خلال جندي واحد او صنع رالي على قادة الحرب ، <span className="text-red-300">جميع ما سيحدث من هذا هو هجوم وهمي لتشتيت الإنتباه ، لا يجب النظر اليه او القلق حياله.</span>
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              <div className="mt-20 sm:mt-28 relative flex flex-col items-center w-full">
+                <div className="relative inline-block">
+                  <div className="text-2xl sm:text-3xl md:text-4xl whitespace-nowrap font-black text-white pb-3 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" dir="rtl">
+                    بداية المعركة A
+                  </div>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-cyan-400 to-transparent shadow-[0_0_12px_2px_rgba(34,211,238,0.6)]" />
+                </div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.4 }}
+                  className="mt-12 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-cyan-500/10 via-transparent to-purple-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-8 relative drop-shadow-md text-center">سباق الدخول</h2>
+                  
+                  <div className="flex flex-col items-center relative gap-4 sm:gap-6 py-6 border border-white/5 bg-white/5 rounded-2xl">
+                    <p className="text-sm sm:text-base text-gray-200 text-center px-4 max-w-2xl font-medium mb-4">
+                      يذهبون كلاهما بهجوم فردي مع تعزيز سرعة المسير القصوى للدخول أولا دون أي تأخير.
+                    </p>
+
+                    <div className="flex justify-center gap-12 sm:gap-32 relative z-10 w-full mb-8">
+                      <CharacterCard name="no time" gradient="from-cyan-500 to-cyan-700" size="normal" />
+                      <CharacterCard name="بيرسيفال" gradient="from-cyan-500 to-cyan-700" size="normal" />
+                    </div>
+                    
+                    {/* SVG Data Structure Connection Lines */}
+                    <div className="absolute top-[130px] sm:top-[140px] left-0 w-full h-24 pointer-events-none flex justify-center opacity-70">
+                      <svg width="100%" height="100%" viewBox="0 0 400 100" preserveAspectRatio="none">
+                        <path d="M 120 0 Q 120 50 200 100" fill="none" stroke="url(#cyan-glow)" strokeWidth="3" strokeDasharray="6 6" className="animate-pulse" />
+                        <path d="M 280 0 Q 280 50 200 100" fill="none" stroke="url(#cyan-glow)" strokeWidth="3" strokeDasharray="6 6" className="animate-pulse" />
+                        <defs>
+                          <linearGradient id="cyan-glow" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.8" />
+                            <stop offset="100%" stopColor="#22d3ee" stopOpacity="0.1" />
+                          </linearGradient>
+                        </defs>
+                      </svg>
+                    </div>
+
+                    <div className="flex flex-col items-center gap-2 z-10 bg-black/60 p-3 sm:p-4 rounded-xl border border-cyan-500/30 shadow-[0_0_20px_rgba(34,211,238,0.2)]">
+                      <Crown className="w-6 h-6 sm:w-8 sm:h-8 text-cyan-400" />
+                      <span className="font-bold text-cyan-100 text-sm sm:text-base">قلعة الملك</span>
+                    </div>
+
+                    <div className="mt-6 flex items-start gap-4 bg-orange-500/5 rounded-xl p-4 sm:p-5 border border-orange-500/20 max-w-2xl mx-4 sm:mx-8">
+                       <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-orange-400 shrink-0 mt-0.5" />
+                       <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                         قد يفعل ذلك <span className="font-bold text-orange-400">Ymfalex115</span> أيضا ويدخل قبلنا ، لكنه لن يتحمل ضربتين قوية متتالية في وقت واحد مما سيجعله خارج القلعة بسرعة.
+                       </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.6 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-emerald-500/10 via-transparent to-blue-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-emerald-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">قيادة القلعة (بيرسيفال)</h2>
+                  
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-8 bg-white/5 rounded-xl p-5 sm:p-8 border border-white/5 relative">
+                    
+                    <div className="flex-1 space-y-6 w-full">
+                      <p className="text-sm sm:text-base text-gray-200 leading-relaxed border-r-2 border-emerald-400 pr-4">
+                        أثناء ذلك قائد قلعة الملك سيكون <span className="font-bold text-emerald-400">بيرسيفال</span>. يحصل على دعم القوات الأساسية <span className="font-bold text-emerald-400">مستوى 9/10 فقط</span>.
+                      </p>
+                      
+                      <div className="bg-black/30 p-4 rounded-xl border border-white/5 flex flex-col items-center">
+                        <h4 className="text-sm font-bold text-gray-400 mb-4 text-center">الأبطال المطلوبين</h4>
+                        <div className="flex justify-center gap-4 flex-wrap">
+                          <HeroCard name="هاورد" />
+                          <HeroCard name="جورودن" />
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3 bg-red-500/5 p-3 rounded-lg border border-red-500/10">
+                        <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                        <p className="text-xs text-red-200 font-medium">
+                          (بيرسيفال و r5 وحده يتحكم في إخراج القوات الغير مناسبة في قلعة الملك)
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="shrink-0 flex flex-col items-center bg-black/40 p-4 rounded-2xl border border-white/10 shadow-lg w-full md:w-auto">
+                      <h4 className="text-sm font-bold text-white mb-1">تشكيل قوات الدفاع</h4>
+                      <p className="text-xs text-red-400 font-medium mb-3">لا يجب أن يتواجد الرماة</p>
+                      
+                      <div className="h-32 w-32 relative">
+                        <ResponsiveContainer width="100%" height="100%">
+                          <PieChart>
+                            <Pie
+                              data={pieData}
+                              cx="50%"
+                              cy="50%"
+                              innerRadius={25}
+                              outerRadius={50}
+                              dataKey="value"
+                              stroke="none"
+                            >
+                              {pieData.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={entry.color} />
+                              ))}
+                            </Pie>
+                          </PieChart>
+                        </ResponsiveContainer>
+                        <div className="absolute inset-0 flex items-center justify-center font-bold text-white text-sm drop-shadow-md">
+                          100%
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 flex gap-4 w-full justify-center text-xs sm:text-sm">
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_5px_#3b82f6]"></div>
+                          <span className="text-gray-200">مشاة 60%</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_5px_#f97316]"></div>
+                          <span className="text-gray-200">فرسان 40%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 1.8 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-red-500/10 via-transparent to-cyan-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">التناوب التكتيكي (no time)</h2>
+
+                  <div className="flex flex-col gap-6 relative z-10 w-full mb-8 bg-white/5 p-4 sm:p-6 rounded-xl border border-white/5 border-r-2 border-r-cyan-400">
+                      <p className="text-sm sm:text-base text-gray-200 leading-relaxed">
+                          لا فائدة من قدرة <span className="font-bold text-cyan-400">no time</span> مع <span className="font-bold text-emerald-400">بيرسيفال</span> وهم مع بعضهم في مكان واحد. لذلك، بعد حصول <span className="font-bold text-emerald-400">بيرسيفال</span> على الدعم:
+                      </p>
+                      
+                      <div className="space-y-4">
+                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                              <div className="p-2 sm:p-3 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 mt-1">
+                                  <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6" />
+                              </div>
+                              <div>
+                                  <h4 className="text-lg font-bold text-cyan-100 mb-2">الانسحاب والاستعداد</h4>
+                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                                      <span className="font-bold text-cyan-400">no time</span> سيخرج من قلعة الملك ليحتل البرج الشرقي ويمسك به، وينتظر رالي <span className="font-bold text-orange-400">Ymfalex115</span> تجاه قلعة الملك ليكون القوة الضاربة والداعمة.
+                                  </p>
+                              </div>
+                          </div>
+
+                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                              <div className="p-2 sm:p-3 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 mt-1">
+                                  <Swords className="w-5 h-5 sm:w-6 sm:h-6" />
+                              </div>
+                              <div>
+                                  <h4 className="text-lg font-bold text-orange-100 mb-2">توقيت الهجوم المباغت (كيف؟)</h4>
+                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                                      عند تجهيز هجوم ضد <span className="font-bold text-emerald-400">بيرسيفال</span> من خلال 2 رالي، نرى العد التنازلي. عندما يقترب رالي <span className="font-bold text-orange-400">Ymfalex115</span> من النصف أو <span className="font-bold text-red-400">30 ثانية</span> قبل الوصول، يعود <span className="font-bold text-cyan-400">no time</span> إلى قلعته ليستعد لبدء هجوم فردي غير متوقع.
+                                  </p>
+                              </div>
+                          </div>
+
+                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                              <div className="p-2 sm:p-3 rounded-lg bg-red-500/20 text-red-500 shrink-0 mt-1">
+                                  <Target className="w-5 h-5 sm:w-6 sm:h-6" />
+                              </div>
+                              <div>
+                                  <h4 className="text-lg font-bold text-red-100 mb-2">استغلال الضعف (لماذا؟)</h4>
+                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                                      الرالي المزدوج قد يُسقط قلعة الملك من <span className="font-bold text-emerald-400">بيرسيفال</span>، لكن <span className="font-bold text-orange-400">Ymfalex115</span> سيتعرض لإصابات قوية ولن يكون قد جهز وضعية الدفاع بعد.
+                                      <br/><br/>
+                                      لذلك، أثناء بداية زحف رالي العدو، يذهب خلفه <span className="font-bold text-cyan-400">no time</span> بهجوم فردي ليستعيد القلعة مباشرة! لا نمنحهم سوى ثواني، ويبقى <span className="font-bold text-cyan-400">no time</span> في الداخل موقتاً كقائد لاستقبال التعزيزات حتى يتعافى <span className="font-bold text-emerald-400">بيرسيفال</span> (فـ no time لديه إصابات أيضاً ويجب التبادل هكذا).
+                                  </p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  {/* Tactical Map Visualization */}
+                  <div className="relative w-full h-[350px] sm:h-[450px] mt-6 bg-[#121316] rounded-2xl overflow-hidden border border-white/5 max-w-2xl mx-auto shadow-2xl">
+                      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
+                      
+                      {/* Castle background box */}
+                      <div className="absolute top-[30%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[86px] sm:w-[98px] h-[94px] sm:h-[100px] bg-[#121316]/60 rounded-2xl border-2 border-dashed border-emerald-500/50 shadow-[0_0_20px_rgba(16,185,129,0.2)] flex items-center justify-center z-0">
+                          <Crown className="absolute -top-[48px] sm:-top-[56px] w-7 h-7 sm:w-9 sm:h-9 text-emerald-400 drop-shadow-md" />
+                          <span className="absolute -top-[16px] sm:-top-[18px] font-bold text-emerald-100 text-[10px] sm:text-xs whitespace-nowrap bg-[#121316] px-2 sm:px-3 py-0.5 sm:py-1 rounded-xl border border-emerald-500/30 shadow-md">قلعة الملك</span>
+                      </div>
+
+                      {/* Percival */}
+                      <motion.div
+                        className="absolute z-10 flex flex-col items-center justify-center"
+                        style={{ x: '-50%', y: '-50%' }}
+                        animate={{
+                          top: ['30%', '30%', '50%', '50%', '50%', '30%'],
+                          left: ['50%', '50%', '20%', '20%', '20%', '50%'],
+                          opacity: [1, 1, 0, 0, 0, 1],
+                          scale: [1, 1, 0.5, 0.5, 0.5, 1],
+                        }}
+                        transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, times: [0, 0.25, 0.35, 0.90, 0.95, 1] }}
+                      >
+                        <CharacterCard name="بيرسيفال" gradient="from-emerald-500 to-emerald-700" size="normal" />
+                        <span className="absolute -bottom-8 text-[10px] sm:text-xs text-emerald-400 font-bold bg-black/80 rounded px-2 py-0.5 border border-emerald-500/50 whitespace-nowrap shadow-md z-10">يدافع</span>
+                      </motion.div>
+
+                      {/* Ymfalex115 */}
+                      <motion.div
+                        className="absolute z-20 flex flex-col items-center justify-center"
+                        style={{ x: '-50%', y: '-50%' }}
+                        animate={{
+                          top: ['70%', '70%', '30%', '30%', '50%', '50%', '50%', '70%'],
+                          left: ['80%', '80%', '50%', '50%', '80%', '80%', '80%', '80%'],
+                          opacity: [1, 1, 1, 1, 0, 0, 0, 1],
+                          scale: [1, 1, 1, 1, 0.5, 0.5, 0.5, 1],
+                        }}
+                        transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, times: [0, 0.10, 0.25, 0.50, 0.60, 0.90, 0.95, 1] }}
+                      >
+                        <div className="relative">
+                          <CharacterCard name="Ymfalex115" gradient="from-orange-500 to-orange-700" size="normal" />
+                          <div className="absolute -top-3 -right-3 bg-red-500/20 border border-red-500/50 rounded-lg p-1.5 shadow-lg shadow-red-500/20 animate-pulse">
+                              <Swords className="w-4 h-4 text-red-500" />
+                          </div>
+                        </div>
+                        <span className="absolute -bottom-8 text-[10px] sm:text-xs text-orange-400 font-bold bg-black/80 rounded px-2 py-0.5 border border-orange-500/50 whitespace-nowrap shadow-md z-10">رالي هجومي</span>
+                      </motion.div>
+
+                      {/* no time */}
+                      <motion.div
+                        className="absolute z-30 flex flex-col items-center justify-center"
+                        style={{ x: '-50%', y: '-50%' }}
+                        animate={{
+                          top: ['70%', '70%', '30%', '30%', '30%', '70%'],
+                          left: ['20%', '20%', '50%', '50%', '50%', '20%'],
+                          opacity: [1, 1, 1, 1, 0, 1],
+                          scale: [1, 1, 1, 1, 1, 1],
+                        }}
+                        transition={{ duration: 7, ease: "easeInOut", repeat: Infinity, times: [0, 0.35, 0.50, 0.90, 0.95, 1] }}
+                      >
+                        <div className="relative">
+                          <CharacterCard name="no time" gradient="from-cyan-500 to-cyan-700" size="normal" />
+                          <div className="absolute -top-3 -left-3 bg-cyan-500/20 border border-cyan-500/50 rounded-lg p-1.5 shadow-lg shadow-cyan-500/20">
+                              <Target className="w-4 h-4 text-cyan-400" />
+                          </div>
+                        </div>
+                        <span className="absolute -bottom-8 text-[10px] sm:text-xs text-cyan-400 font-bold bg-black/80 rounded px-2 py-0.5 border border-cyan-500/50 whitespace-nowrap shadow-md z-10">هجوم فردي مضاد</span>
+                      </motion.div>
+                  </div>
+
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.0 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-orange-500/10 via-transparent to-cyan-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-cyan-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">في حال فشل الهجوم</h2>
+                  
+                  <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300 relative">
+                    <div className="p-2 sm:p-3 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                      <Target className="w-5 h-5 sm:w-6 sm:h-6" />
+                    </div>
+                    <div>
+                      <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                        في حال فشل هجوم <span className="font-bold text-orange-400">Ymfalex115</span>، يعود <span className="font-bold text-cyan-400">no time</span> ليصنع رالي من أجل أخذ <span className="font-bold text-cyan-200">برج إضافي ثالث</span>.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.2 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-red-950/30 border border-red-500/20 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-red-600/10 via-transparent to-orange-600/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">الخطة B (استعادة القلعة)</h2>
+                  
+                  <div className="flex flex-col gap-6 items-center bg-red-500/5 rounded-xl p-5 sm:p-8 border border-red-500/10 hover:bg-red-500/10 transition-colors duration-300 relative">
+                    <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium text-center max-w-2xl mt-2">
+                      في حال واجهنا مشاكل في <span className="font-bold text-white">الخطة A</span> وخسرنا قلعة الملك، سنقوم بصنع <span className="font-bold text-red-400">رالي مزدوج في نفس الثانية</span>:
+                    </p>
+                    
+                    <div className="flex justify-center gap-6 sm:gap-12 flex-wrap w-full">
+                      <div className="flex flex-col items-center gap-3">
+                        <CharacterCard name="no time" gradient="from-cyan-500 to-cyan-700" size="normal" />
+                        <span className="text-xs text-red-300 bg-red-500/20 px-3 py-1 rounded-md border border-red-500/30 font-bold">الرالي الأول</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-3">
+                        <CharacterCard name="بيرسيفال" gradient="from-cyan-500 to-cyan-700" size="normal" />
+                        <span className="text-xs text-red-300 bg-red-500/20 px-3 py-1 rounded-md border border-red-500/30 font-bold">الرالي الثاني</span>
+                      </div>
+                    </div>
+
+                    <div className="w-full max-w-xl mx-auto h-px bg-gradient-to-r from-transparent via-red-500/30 to-transparent my-2" />
+
+                    <div className="flex flex-col items-center gap-4 w-full bg-purple-500/5 rounded-xl p-4 sm:p-6 border border-purple-500/10">
+                      <p className="text-sm sm:text-base text-purple-200 leading-relaxed font-medium text-center">
+                          مدعومة بقوات <span className="font-bold text-white px-1">9 و 10</span> من الأعضاء:
+                      </p>
+                      <div className="flex flex-col items-center gap-3 mt-2">
+                        <CharacterCard name="تشينكو" gradient="from-purple-500 to-purple-700" size="normal" />
+                        <span className="text-xs text-purple-300 bg-purple-500/20 px-4 py-1.5 rounded-md border border-purple-500/30 font-bold">البطل الرئيسي - دعم الرالي للهجوم</span>
+                      </div>
+                    </div>
+                    
+                    <div className="mt-2 flex items-center justify-center p-3 sm:p-4 bg-red-500/10 rounded-lg border border-red-500/20 w-full max-w-lg mb-2">
+                      <p className="text-sm sm:text-base text-red-200 font-bold flex items-center gap-2">
+                        <AlertTriangle className="w-5 h-5 text-red-400 shrink-0" />
+                        هذا الشيء مؤكد 100% من أجل استعادة قلعة الملك بعد خسارتها.
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.4 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-orange-500/10 via-transparent to-yellow-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-yellow-500/50 to-transparent" />
+                  
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">بداية المعركة / احتلال الابراج A</h2>
+                  
+                  <div className="space-y-4 relative">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="shrink-0 flex items-center justify-center gap-2">
+                        <CharacterCard name="보단이" gradient="from-orange-500 to-orange-700" />
+                      </div>
+                      <div className="flex-1 mt-2 sm:mt-0 text-center sm:text-right">
+                        <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
+                           <Shield className="w-5 h-5 text-orange-400" />
+                           <h4 className="text-base sm:text-lg font-bold text-orange-100">البرج الجنوبي</h4>
+                        </div>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                          (<span className="font-bold text-orange-400">보단이</span>) يذهب بشكل فردي من اجل ان يحتل البرج الجنوبي ويكون قائد هذا البرج طوال فترة المعركة ، حيث يطرد القوات الخطأ هو بمساعدة r5
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="shrink-0 flex items-center justify-center gap-3">
+                        <CharacterCard name="云公馆" gradient="from-orange-500 to-orange-700" />
+                        <CharacterCard name="no time" gradient="from-cyan-500 to-cyan-700" />
+                      </div>
+                      <div className="flex-1 mt-2 sm:mt-0 text-center sm:text-right">
+                        <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
+                           <Target className="w-5 h-5 text-yellow-400" />
+                           <h4 className="text-base sm:text-lg font-bold text-yellow-100">البرج الشرقي</h4>
+                        </div>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                          (<span className="font-bold text-orange-400">云公馆</span>) يذهب بشكل فردي من اجل ان يحتل البرج الشرقي ويكون قائد هذا البرج طوال فترة المعركة ، حيث يطرد القوات الخطأ هو و بمساعدة r5 ويكون معه (<span className="font-bold text-cyan-400">no time</span>) يساعده حيث بينهم تبادل في قيادة البرج بشكل مستمر لأن <span className="font-bold text-cyan-400">no time</span> قد يخرج لمساعدة بيرسيفال
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.6 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-red-500/10 via-transparent to-orange-500/10 blur-xl opacity-50 rounded-2xl" />
+                  
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-red-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">الخطة B (استعادة الأبراج)</h2>
+                  
+                  <div className="space-y-4 relative">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="shrink-0 flex items-center justify-center gap-3">
+                        <CharacterCard name="보단이" gradient="from-orange-500 to-orange-700" />
+                        <CharacterCard name="云公馆" gradient="from-orange-500 to-orange-700" />
+                      </div>
+                      <div className="flex-1 mt-2 sm:mt-0 text-center sm:text-right">
+                        <div className="flex items-center justify-center sm:justify-start gap-2 mb-3">
+                           <Swords className="w-5 h-5 text-red-400" />
+                           <h4 className="text-base sm:text-lg font-bold text-red-100">هجوم مضاد (رالي)</h4>
+                        </div>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium mb-4">
+                          في حال خسارة الابراج فتح رالي من قبل قادة الابراج (<span className="font-bold text-orange-400">보단이</span> ، <span className="font-bold text-orange-400">云公馆</span>) مدعومة بقوات مستوى <span className="font-bold text-yellow-400">9/8</span> من اجل استعادته.
+                        </p>
+                        <div className="inline-block bg-white/5 rounded-lg p-3 sm:px-4 w-full border border-white/10 text-center sm:text-right">
+                          <p className="text-xs sm:text-sm text-yellow-200/80 font-bold flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2">
+                             <Shield className="w-4 h-4 text-yellow-400 shrink-0" />
+                             الابراج تمنح قائد قلعة الملك زيادة في القوة الدفاعية والهجومية
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* NEW SECTION: تعليمات القيادة */}
+              <div className="mt-20 sm:mt-28 relative flex flex-col items-center w-full">
+                <div className="relative inline-block">
+                  <div className="text-2xl sm:text-3xl md:text-4xl whitespace-nowrap font-black text-white pb-3 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" dir="rtl">
+                    تعليمات القيادة
+                  </div>
+                  <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[120%] h-[2px] bg-gradient-to-r from-transparent via-purple-400 to-transparent shadow-[0_0_12px_2px_rgba(168,85,247,0.6)]" />
+                </div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 2.8 }}
+                  className="mt-12 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-blue-500/10 via-transparent to-purple-500/10 blur-xl opacity-50 rounded-2xl" />
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">أثناء وبعد المعركة</h2>
+                  
+                  <div className="space-y-4 relative">
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-blue-500/20 text-blue-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                        <Users className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-blue-100 mb-2">تعليمات R4</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                          سيكون مهمتهم توجيه الأعضاء وإرشادهم لفعل الشيء الصحيح وعدم ارتكاب الأخطاء، يحق لهم إزالة الأعضاء من التحالف لمن لا يستمع إلى التعليمات أو يستمر في ارتكاب الأخطاء خاصتاً من يمتلك <span className="font-bold text-red-400">قوات مستوى أقل من 8</span>.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-green-500/20 text-green-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(34,197,94,0.2)]">
+                        <Crown className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-green-100 mb-2">بعد احتلال قلعة الملك (بـ ساعتين ونصف)</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                          هكذا قد تم ضمان الفوز وتم تحقيق المطلوب وسيكون القتال ودي، وسيكون فقط لحصد النقاط من أجل الأعضاء لكسب المكافأة حيث يمكن للجميع ان يدخل قلعة الملك أو يتصرف بحرية.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                      <div className="p-2 sm:p-3 rounded-lg bg-purple-500/20 text-purple-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
+                        <Target className="w-5 h-5 sm:w-6 sm:h-6" />
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-bold text-purple-100 mb-2">التصويت والإدارة القادمة</h4>
+                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                          بعد ضمان الفوز سيتم صنع تصويت من أجل اختيار ملك المملكة باختيار أعضاء تحالف BiG كون ولاية MOUSA قد انتهت. هذا الإجراء ليضل التحالف أكثر عدالة ومنع حدوث أي توترات بين القادة ومنح فرصة للآخرين في القيادة إن كان من يرغب في r5.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+
+                <motion.div 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8, delay: 3.0 }}
+                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
+                  dir="rtl"
+                >
+                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-amber-500/10 via-transparent to-orange-500/10 blur-xl opacity-50 rounded-2xl" />
+                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
+                  
+                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">قوانين وشروط القيادة الجديد</h2>
+                  
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative">
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-cyan-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
+                         <Clock className="w-6 h-6 text-cyan-400" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        فترة ولاية r5 تستمر لمدة <span className="font-bold text-cyan-400">أسبوعين</span>
+                      </p>
+                    </div>
+                    
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-orange-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(249,115,22,0.2)]">
+                         <Crown className="w-6 h-6 text-orange-400" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        لا يحق للقائد الترشح <span className="font-bold text-orange-400">أكثر من مرتين</span>
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-red-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                         <Shield className="w-6 h-6 text-red-500" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        لا ينبغي استخدام سلطته في <span className="font-bold text-red-400">نزاعاته الشخصية</span>
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-blue-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                         <Users className="w-6 h-6 text-blue-400" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        العمل كمجموعة وأخذ <span className="font-bold text-blue-400">آراء r4</span> قبل اتخاذ اجراء مصيري
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-yellow-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
+                         <Zap className="w-6 h-6 text-yellow-400" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        النشاط بشكل مستمر والاهتمام في التحالف <br/><span className="text-xs text-yellow-500 mt-1 block">(لا يمكن للقائد ان يغيب أكثر من 12 ساعة)</span>
+                      </p>
+                    </div>
+
+                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
+                      <div className="p-3 bg-emerald-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                         <Building2 className="w-6 h-6 text-emerald-400" />
+                      </div>
+                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
+                        <span className="font-bold text-emerald-400">التواصل</span> في محادثة التحالف + الرسائل الخاصة في إعطاء التعليمات
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </main>
+    </BackgroundTheme>
+  );
+}
