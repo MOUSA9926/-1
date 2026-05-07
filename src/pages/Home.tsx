@@ -5,7 +5,7 @@ import { WolfEye, BackgroundTheme } from "../components/BackgroundTheme";
 
 const kingsLeaders = ["بيرسيفال", "no time"];
 const towerLeaders = ["云公馆", "보단이"];
-const mainSupporters = ["LanceHiro", "Venus S2", "stratusjmd", "Avatar", "Ally", "ゆきちゃん", "Jharoth"];
+const mainSupporters = ["LanceHiro", "Venus S2", "stratusjmd", "Avatar", "Ally", "ゆきちゃん", "Jharoth", "Asif", "Mineaw", "Desperado", "Sona", "RedDotz", "DNA", "NATi"];
 
 const warLeaders = [
   { name: "云公馆", gradient: "from-orange-500 to-orange-700" },
@@ -32,7 +32,14 @@ const characterAvatars: Record<string, string> = {
   "stratusjmd": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
   "تشينكو": "https://www.kingshotguide.org/images/heroes/chenko.webp",
   "هاورد": "https://got-global-wiki.s3.us-west-1.amazonaws.com/wp-content/uploads/2025/10/%E7%B4%AB%E3%80%90.png",
-  "جورودن": "https://www.allclash.com/wp-content/uploads/2025/03/Screenshot-111.png"
+  "جورودن": "https://www.allclash.com/wp-content/uploads/2025/03/Screenshot-111.png",
+  "Asif": "https://got-global-avatar.akamaized.net/avatar/2026/04/29/KB36jn_1777486506.png",
+  "Mineaw": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1004.png",
+  "Desperado": "https://got-global-avatar.akamaized.net/avatar/2026/05/04/r5OKLE_1777906209.png",
+  "Sona": "https://got-global-avatar.akamaized.net/avatar/2026/03/20/v5G9N0_1774049643.png",
+  "RedDotz": "https://got-global-avatar.akamaized.net/avatar/2026/04/22/Nj3x2L_1776880956.png",
+  "DNA": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1002.png",
+  "NATi": "https://got-global-avatar.akamaized.net/avatar/2026/04/10/Ao4l31_1775844983.png"
 };
 
 const pieData = [
@@ -159,7 +166,7 @@ export default function Home() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.8, delay: 0.2 }}
-                  className="mt-12 w-full max-w-md mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-6 relative overflow-hidden group shadow-2xl"
+                  className="mt-12 w-full max-w-2xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-6 relative overflow-hidden group shadow-2xl"
                   dir="rtl"
                 >
                   {/* Decorative background glow */}
@@ -171,23 +178,68 @@ export default function Home() {
                   
                   <h2 className="text-xl sm:text-2xl font-black text-white mb-5 relative drop-shadow-md text-center sm:text-right">المقدمة</h2>
                   
-                  <div className="space-y-3 relative">
-                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
-                      <div className="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
-                        <Clock className="w-5 h-5" />
+                  <div className="space-y-4 relative">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="flex-1 flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                        <div className="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.2)]">
+                          <Clock className="w-5 h-5" />
+                        </div>
+                        <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
+                          المعركة تستمر <span className="font-bold text-cyan-400 ml-1">5 ساعات</span>
+                        </p>
                       </div>
-                      <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
-                        المعركة تستمر <span className="font-bold text-cyan-400 ml-1">5 ساعات</span>
-                      </p>
+                      
+                      <div className="flex-1 flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
+                        <div className="p-2.5 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
+                          <Target className="w-5 h-5" />
+                        </div>
+                        <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
+                          <span className="font-bold text-orange-400">المطلوب ساعتين ونصف</span>
+                        </p>
+                      </div>
                     </div>
-                    
-                    <div className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5 hover:bg-white/10 transition-colors duration-300">
-                      <div className="p-2.5 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 shadow-[0_0_10px_rgba(249,115,22,0.2)]">
-                        <Target className="w-5 h-5" />
+
+                    <div className="flex flex-col gap-3 bg-cyan-500/5 rounded-xl p-4 sm:p-5 border border-cyan-500/10 hover:bg-cyan-500/10 transition-colors duration-300 shadow-inner mb-4">
+                      <div className="flex items-center gap-3">
+                         <div className="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-500 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.3)]">
+                           <Crown className="w-5 h-5" />
+                         </div>
+                         <h3 className="text-lg sm:text-xl font-bold text-cyan-100">القائد الأساسي</h3>
                       </div>
-                      <p className="text-base sm:text-lg text-gray-200 font-medium leading-tight">
-                        <span className="font-bold text-orange-400">المطلوب ساعتين ونصف</span>
-                      </p>
+                      <div className="mt-1 space-y-3 pr-3 border-r-2 border-cyan-500/30 mr-2 flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-700 flex items-center justify-center shadow-lg border border-white/20 overflow-hidden shrink-0 mx-auto sm:mx-0">
+                          {characterAvatars["no time"] ? (
+                            <img src={characterAvatars["no time"]} alt="no time" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                          ) : (
+                            <span className="text-xl font-bold text-white">N</span>
+                          )}
+                        </div>
+                        <p className="text-base sm:text-lg text-gray-200 leading-relaxed font-medium text-center sm:text-right">
+                          الاعتماد الأكبر في هذه المعركة سيكون على <span className="font-black text-cyan-400 text-xl tracking-wider">no time</span>.
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3 bg-red-500/5 rounded-xl p-4 sm:p-5 border border-red-500/10 hover:bg-red-500/10 transition-colors duration-300 shadow-inner">
+                      <div className="flex items-center gap-3">
+                         <div className="p-2.5 rounded-lg bg-red-500/20 text-red-500 shrink-0 shadow-[0_0_10px_rgba(239,68,68,0.3)]">
+                           <Swords className="w-5 h-5" />
+                         </div>
+                         <h3 className="text-lg sm:text-xl font-bold text-red-100">الخصوم <span className="text-gray-400 font-medium text-sm ml-2">(التحالفات المعادية)</span></h3>
+                      </div>
+                      <div className="mt-1 space-y-3 pr-3 border-r-2 border-red-500/30 mr-2">
+                        <div className="flex flex-col gap-1">
+                          <p className="text-base sm:text-lg text-gray-200 leading-relaxed font-medium">
+                            نواجه في هذه المعركة كلاً من <span className="font-black text-red-400 tracking-wider">KGM</span> و <span className="font-black text-red-400 tracking-wider">DSN</span>
+                          </p>
+                        </div>
+                        <div className="flex items-start gap-3 bg-black/20 p-3 rounded-lg border border-red-500/20">
+                           <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
+                           <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                             الحوت الأقوى ضدنا هو <span className="font-bold text-orange-400">Ymfalex115</span>، وهو الخطر الأكبر ويجب التعاون للتصدي لهجماته .
+                           </p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -239,9 +291,9 @@ export default function Home() {
                         <Users className="w-5 h-5 text-gray-400" />
                         <h3 className="text-lg font-bold text-gray-100">داعمين قلعة الملك الأساسي</h3>
                       </div>
-                      <div className="grid grid-cols-3 gap-3 w-fit mx-auto sm:mx-0">
+                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 w-full mx-auto sm:mx-0">
                         {mainSupporters.map(name => (
-                          <CharacterCard key={name} name={name} gradient="from-gray-600 to-gray-800" />
+                          <CharacterCard key={name} name={name} gradient="from-gray-600 to-gray-800" size="small" />
                         ))}
                       </div>
                     </div>
@@ -568,7 +620,7 @@ export default function Home() {
                       <div className="flex items-start gap-3 bg-red-500/5 p-3 rounded-lg border border-red-500/10">
                         <AlertTriangle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
                         <p className="text-xs text-red-200 font-medium">
-                          (بيرسيفال و r5 وحده يتحكم في إخراج القوات الغير مناسبة في قلعة الملك)
+                          بيرسيفال و r5 وحده يتحكم في إخراج القوات الغير مناسبة في قلعة الملك
                         </p>
                       </div>
                     </div>
@@ -631,45 +683,78 @@ export default function Home() {
 
                   <div className="flex flex-col gap-6 relative z-10 w-full mb-8 bg-white/5 p-4 sm:p-6 rounded-xl border border-white/5 border-r-2 border-r-cyan-400">
                       <p className="text-sm sm:text-base text-gray-200 leading-relaxed">
-                          لا فائدة من قدرة <span className="font-bold text-cyan-400">no time</span> مع <span className="font-bold text-emerald-400">بيرسيفال</span> وهم مع بعضهم في مكان واحد. لذلك، بعد حصول <span className="font-bold text-emerald-400">بيرسيفال</span> على الدعم:
+                          لا فائدة من قوة <span className="font-bold text-cyan-400">no time</span> مع <span className="font-bold text-emerald-400">بيرسيفال</span> وهم مع بعضهم في مكان واحد. لذلك، بعد حصول <span className="font-bold text-emerald-400">بيرسيفال</span> على الدعم:
                       </p>
                       
-                      <div className="space-y-4">
-                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                      <div className="flex flex-col gap-2 sm:gap-3">
+                          <div className="flex items-start gap-3 sm:gap-4 bg-black/30 rounded-xl p-3 sm:p-5 border border-white/5">
                               <div className="p-2 sm:p-3 rounded-lg bg-cyan-500/20 text-cyan-400 shrink-0 mt-1">
                                   <ArrowDown className="w-5 h-5 sm:w-6 sm:h-6" />
                               </div>
-                              <div>
-                                  <h4 className="text-lg font-bold text-cyan-100 mb-2">الانسحاب والاستعداد</h4>
-                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                              <div className="min-w-0">
+                                  <h4 className="text-sm sm:text-lg font-bold text-cyan-100 mb-1 sm:mb-2 leading-tight">الانسحاب والاستعداد</h4>
+                                  <p className="text-xs sm:text-base text-gray-300 leading-relaxed">
                                       <span className="font-bold text-cyan-400">no time</span> سيخرج من قلعة الملك ليحتل البرج الشرقي ويمسك به، وينتظر رالي <span className="font-bold text-orange-400">Ymfalex115</span> تجاه قلعة الملك ليكون القوة الضاربة والداعمة.
                                   </p>
                               </div>
                           </div>
 
-                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                          <div className="flex justify-center -my-1 sm:-my-2 relative z-10 w-full animate-pulse">
+                              <div className="bg-[#121316] p-1 rounded-full border border-white/10 shadow-lg">
+                                  <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-cyan-400/70" />
+                              </div>
+                          </div>
+
+                          <div className="flex items-start gap-3 sm:gap-4 bg-black/30 rounded-xl p-3 sm:p-5 border border-white/5">
                               <div className="p-2 sm:p-3 rounded-lg bg-orange-500/20 text-orange-400 shrink-0 mt-1">
                                   <Swords className="w-5 h-5 sm:w-6 sm:h-6" />
                               </div>
-                              <div>
-                                  <h4 className="text-lg font-bold text-orange-100 mb-2">توقيت الهجوم المباغت (كيف؟)</h4>
-                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
+                              <div className="min-w-0">
+                                  <h4 className="text-sm sm:text-lg font-bold text-orange-100 mb-1 sm:mb-2 leading-tight">توقيت الهجوم المباغت (كيف؟)</h4>
+                                  <p className="text-xs sm:text-base text-gray-300 leading-relaxed">
                                       عند تجهيز هجوم ضد <span className="font-bold text-emerald-400">بيرسيفال</span> من خلال 2 رالي، نرى العد التنازلي. عندما يقترب رالي <span className="font-bold text-orange-400">Ymfalex115</span> من النصف أو <span className="font-bold text-red-400">30 ثانية</span> قبل الوصول، يعود <span className="font-bold text-cyan-400">no time</span> إلى قلعته ليستعد لبدء هجوم فردي غير متوقع.
                                   </p>
                               </div>
                           </div>
 
-                          <div className="flex items-start gap-4 bg-black/30 rounded-xl p-4 sm:p-5 border border-white/5">
+                          <div className="flex justify-center -my-1 sm:-my-2 relative z-10 w-full animate-pulse">
+                              <div className="bg-[#121316] p-1 rounded-full border border-white/10 shadow-lg">
+                                  <ArrowDown className="w-4 h-4 sm:w-5 sm:h-5 text-orange-400/70" />
+                              </div>
+                          </div>
+
+                          <div className="flex items-start gap-3 sm:gap-4 bg-black/30 rounded-xl p-3 sm:p-5 border border-white/5">
                               <div className="p-2 sm:p-3 rounded-lg bg-red-500/20 text-red-500 shrink-0 mt-1">
                                   <Target className="w-5 h-5 sm:w-6 sm:h-6" />
                               </div>
-                              <div>
-                                  <h4 className="text-lg font-bold text-red-100 mb-2">استغلال الضعف (لماذا؟)</h4>
-                                  <p className="text-sm sm:text-base text-gray-300 leading-relaxed">
-                                      الرالي المزدوج قد يُسقط قلعة الملك من <span className="font-bold text-emerald-400">بيرسيفال</span>، لكن <span className="font-bold text-orange-400">Ymfalex115</span> سيتعرض لإصابات قوية ولن يكون قد جهز وضعية الدفاع بعد.
-                                      <br/><br/>
-                                      لذلك، أثناء بداية زحف رالي العدو، يذهب خلفه <span className="font-bold text-cyan-400">no time</span> بهجوم فردي ليستعيد القلعة مباشرة! لا نمنحهم سوى ثواني، ويبقى <span className="font-bold text-cyan-400">no time</span> في الداخل موقتاً كقائد لاستقبال التعزيزات حتى يتعافى <span className="font-bold text-emerald-400">بيرسيفال</span> (فـ no time لديه إصابات أيضاً ويجب التبادل هكذا).
-                                  </p>
+                              <div className="min-w-0">
+                                  <h4 className="text-sm sm:text-lg font-bold text-red-100 mb-1 sm:mb-2 leading-tight">استغلال الضعف (لماذا؟)</h4>
+                                  <ul className="space-y-2 mt-2">
+                                      <li className="flex items-start gap-2 sm:gap-3">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                                          <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                              الرالي المزدوج قد يُسقط قلعة الملك من <span className="font-bold text-emerald-400">بيرسيفال</span>.
+                                          </p>
+                                      </li>
+                                      <li className="flex items-start gap-2 sm:gap-3">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                                          <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                              لكن <span className="font-bold text-orange-400">Ymfalex115</span> سيتعرض لإصابات قوية ولن يكون قد جهز وضعية الدفاع بعد.
+                                          </p>
+                                      </li>
+                                      <li className="flex items-start gap-2 sm:gap-3">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                                          <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                              أثناء بداية زحف رالي العدو، يذهب خلفه <span className="font-bold text-cyan-400">no time</span> بهجوم فردي ليستعيد القلعة مباشرة!
+                                          </p>
+                                      </li>
+                                      <li className="flex items-start gap-2 sm:gap-3">
+                                          <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(239,68,68,0.8)]" />
+                                          <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                              لا نمنحهم سوى ثواني، ويبقى <span className="font-bold text-cyan-400">no time</span> في الداخل موقتاً كقائد لاستقبال التعزيزات حتى يتعافى <span className="font-bold text-emerald-400">بيرسيفال</span>.
+                                          </p>
+                                      </li>
+                                  </ul>
                               </div>
                           </div>
                       </div>
@@ -940,9 +1025,26 @@ export default function Home() {
                       </div>
                       <div>
                         <h4 className="text-lg font-bold text-blue-100 mb-2">تعليمات R4</h4>
-                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
-                          سيكون مهمتهم توجيه الأعضاء وإرشادهم لفعل الشيء الصحيح وعدم ارتكاب الأخطاء، يحق لهم إزالة الأعضاء من التحالف لمن لا يستمع إلى التعليمات أو يستمر في ارتكاب الأخطاء خاصتاً من يمتلك <span className="font-bold text-red-400">قوات مستوى أقل من 8</span>.
-                        </p>
+                        <ul className="space-y-2 mt-2">
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                توجيه الأعضاء وإرشادهم لفعل الشيء الصحيح وتجنب الأخطاء.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                يحق لهم إزالة الأعضاء الذين لا يستمعون للتعليمات.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                يتم تطبيق هذا الإجراء بشكل خاص على من يمتلك <span className="font-bold text-red-400">قوات مستوى أقل من 8</span> في حال الاستمرار بالخطأ.
+                              </p>
+                           </li>
+                        </ul>
                       </div>
                     </div>
 
@@ -951,93 +1053,31 @@ export default function Home() {
                         <Crown className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
                       <div>
-                        <h4 className="text-lg font-bold text-green-100 mb-2">بعد احتلال قلعة الملك (بـ ساعتين ونصف)</h4>
-                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
-                          هكذا قد تم ضمان الفوز وتم تحقيق المطلوب وسيكون القتال ودي، وسيكون فقط لحصد النقاط من أجل الأعضاء لكسب المكافأة حيث يمكن للجميع ان يدخل قلعة الملك أو يتصرف بحرية.
-                        </p>
+                        <div className="mb-3">
+                          <h4 className="text-lg font-bold text-green-100">بعد احتلال قلعة الملك</h4>
+                          <span className="text-xs text-green-400/80 font-medium">(يحدث هذا بعد مرور ساعتين ونصف)</span>
+                        </div>
+                        <ul className="space-y-2">
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                ضمان الفوز وتحقيق الهدف الأساسي للمعركة.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                يتحول القتال إلى قتال ودي لحصد النقاط وكسب المكافآت.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                يُسمح لجميع الأعضاء بالدخول إلى قلعة الملك والتصرف بحرية.
+                              </p>
+                           </li>
+                        </ul>
                       </div>
-                    </div>
-
-                    <div className="flex items-start gap-4 bg-white/5 rounded-xl p-4 sm:p-5 border border-white/5 hover:bg-white/10 transition-colors duration-300">
-                      <div className="p-2 sm:p-3 rounded-lg bg-purple-500/20 text-purple-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
-                        <Target className="w-5 h-5 sm:w-6 sm:h-6" />
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-bold text-purple-100 mb-2">التصويت والإدارة القادمة</h4>
-                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
-                          بعد ضمان الفوز سيتم صنع تصويت من أجل اختيار ملك المملكة باختيار أعضاء تحالف BiG كون ولاية MOUSA قد انتهت. هذا الإجراء ليضل التحالف أكثر عدالة ومنع حدوث أي توترات بين القادة ومنح فرصة للآخرين في القيادة إن كان من يرغب في r5.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 3.0 }}
-                  className="mt-8 w-full max-w-4xl mx-auto backdrop-blur-md bg-black/40 border border-white/10 rounded-2xl p-5 sm:p-8 relative overflow-hidden group shadow-2xl"
-                  dir="rtl"
-                >
-                  <div className="absolute -inset-x-10 -inset-y-10 bg-gradient-to-r from-amber-500/10 via-transparent to-orange-500/10 blur-xl opacity-50 rounded-2xl" />
-                  <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-amber-500/50 to-transparent" />
-                  <div className="absolute bottom-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-orange-500/50 to-transparent" />
-                  
-                  <h2 className="text-xl sm:text-2xl font-black text-white mb-6 relative drop-shadow-md text-center">قوانين وشروط القيادة الجديد</h2>
-                  
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 relative">
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-cyan-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(34,211,238,0.2)]">
-                         <Clock className="w-6 h-6 text-cyan-400" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        فترة ولاية r5 تستمر لمدة <span className="font-bold text-cyan-400">أسبوعين</span>
-                      </p>
-                    </div>
-                    
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-orange-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(249,115,22,0.2)]">
-                         <Crown className="w-6 h-6 text-orange-400" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        لا يحق للقائد الترشح <span className="font-bold text-orange-400">أكثر من مرتين</span>
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-red-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
-                         <Shield className="w-6 h-6 text-red-500" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        لا ينبغي استخدام سلطته في <span className="font-bold text-red-400">نزاعاته الشخصية</span>
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-blue-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                         <Users className="w-6 h-6 text-blue-400" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        العمل كمجموعة وأخذ <span className="font-bold text-blue-400">آراء r4</span> قبل اتخاذ اجراء مصيري
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-yellow-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(234,179,8,0.2)]">
-                         <Zap className="w-6 h-6 text-yellow-400" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        النشاط بشكل مستمر والاهتمام في التحالف <br/><span className="text-xs text-yellow-500 mt-1 block">(لا يمكن للقائد ان يغيب أكثر من 12 ساعة)</span>
-                      </p>
-                    </div>
-
-                    <div className="flex flex-col items-center text-center p-5 bg-white/5 border border-white/5 hover:bg-white/10 transition-colors duration-300 rounded-xl">
-                      <div className="p-3 bg-emerald-500/10 rounded-full mb-3 shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                         <Building2 className="w-6 h-6 text-emerald-400" />
-                      </div>
-                      <p className="text-sm sm:text-base text-gray-300 font-medium leading-relaxed">
-                        <span className="font-bold text-emerald-400">التواصل</span> في محادثة التحالف + الرسائل الخاصة في إعطاء التعليمات
-                      </p>
                     </div>
                   </div>
                 </motion.div>
