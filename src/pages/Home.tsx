@@ -1,11 +1,13 @@
+import React, { useRef, useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, Clock, Target, Crown, Building2, Users, Swords, Zap, AlertTriangle, ArrowDown } from "lucide-react";
+import { Shield, Clock, Target, Crown, Building2, Users, Swords, Zap, AlertTriangle, ArrowDown, Youtube, ListChecks, Music, Pause, Play } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { WolfEye, BackgroundTheme } from "../components/BackgroundTheme";
 
 const kingsLeaders = ["بيرسيفال", "no time"];
 const towerLeaders = ["云公馆", "보단이"];
-const mainSupporters = ["LanceHiro", "Venus S2", "stratusjmd", "Avatar", "Ally", "ゆきちゃん", "Jharoth", "Asif", "Mineaw", "Desperado", "Sona", "RedDotz", "DNA", "NATi"];
+const kingsSupporters = ["LanceHiro", "Venus S2", "Avatar", "Ally", "ゆきちゃん", "Jharoth", "Asif", "Mineaw", "Desperado", "Sona", "RedDotz", "DNA", "MOUSA", "『σXσ』"];
+const towerSupporters = ["NATi", "Polar Bear", "دحوم", "DARK", "梁小凱", "Alaz", "kondom bocor", "Gulu_Gulu", "Ahmed", "Dracula", "02AB", "QryptoxX", "Dratharox", "Brigade", "오징어게임", "Batman", "F5M", "sang", "MAGO", "KingArthur", "Chaos", "AlfonsoG", "ADY", "LaShawna", "RoboticLoger", "Ꮢᴇᴅ〆Evɪʟ"];
 
 const warLeaders = [
   { name: "云公馆", gradient: "from-orange-500 to-orange-700" },
@@ -39,7 +41,38 @@ const characterAvatars: Record<string, string> = {
   "Sona": "https://got-global-avatar.akamaized.net/avatar/2026/03/20/v5G9N0_1774049643.png",
   "RedDotz": "https://got-global-avatar.akamaized.net/avatar/2026/04/22/Nj3x2L_1776880956.png",
   "DNA": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1002.png",
-  "NATi": "https://got-global-avatar.akamaized.net/avatar/2026/04/10/Ao4l31_1775844983.png"
+  "NATi": "https://got-global-avatar.akamaized.net/avatar/2026/04/10/Ao4l31_1775844983.png",
+  "Polar Bear": "https://got-global-avatar.akamaized.net/avatar/2026/04/08/jMDK45_1775610465.png",
+  "دحوم": "https://got-global-avatar.akamaized.net/avatar/2026/03/20/1qRq1j_1773968963.png",
+  "DARK": "https://got-global-avatar.akamaized.net/avatar/2026/03/20/kKqvAX_1773969639.png",
+  "梁小凱": "https://got-global-avatar.akamaized.net/avatar/2026/03/27/1qR7lP_1774583756.png",
+  "Alaz": "https://got-global-avatar.akamaized.net/avatar/2026/04/17/0pQE65_1776455082.png",
+  "kondom bocor": "https://got-global-avatar.akamaized.net/avatar/2026/04/14/q5Nzgy_1776204173.png",
+  "Gulu_Gulu": "https://got-global-avatar.akamaized.net/avatar/2026/04/29/Ev38W4_1777451644.png",
+  "Ahmed": "https://got-global-avatar.akamaized.net/avatar/2026/04/28/v5V6Jm_1777413346.png",
+  "Dracula": "https://got-global-avatar.akamaized.net/avatar/2026/04/06/8A400m_1775437639.png",
+  "『σXσ』": "https://got-global-avatar.akamaized.net/avatar/2026/04/29/8A4PXW_1777475885.png",
+  "02AB": "https://got-global-avatar.akamaized.net/avatar/2026/03/24/lLrw9j_1774315145.png",
+  "QryptoxX": "https://got-global-avatar.akamaized.net/avatar/2026/05/06/Dr4VV6_1778078622.png",
+  "Dratharox": "https://got-global-avatar.akamaized.net/avatar/2026/04/17/gKzAgZ_1776384184.png",
+  "Brigade": "https://got-global-avatar.akamaized.net/avatar/2026/04/24/Gx30yy_1777019429.png",
+  "오징어게임": "https://got-global-avatar.akamaized.net/avatar/2026/03/19/Gx4W8r_1773891374.png",
+  "Batman": "https://got-global-avatar.akamaized.net/avatar/2026/04/27/8A4RW5_1777307535.png",
+  "F5M": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1011.png",
+  "sang": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "MAGO": "https://got-global-avatar.akamaized.net/avatar/2026/04/22/nXKVmp_1776888790.png",
+  "KingArthur": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "Chaos": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1005.png",
+  "AlfonsoG": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1033.png",
+  "ADY": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1032.png",
+  "LaShawna": "https://got-global-avatar.akamaized.net/avatar/2026/03/27/Ao4xBP_1774653131.png",
+  "RoboticLoger": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "Ꮢᴇᴅ〆Evɪʟ": "https://got-global-avatar.akamaized.net/avatar/2026/04/21/LD42qA_1776793734.png",
+  "MOUSA": "https://got-global-avatar.akamaized.net/avatar/2026/04/21/Mg4N4m_1776752064.png",
+  "hank": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "Idle": "https://got-global-avatar.akamaized.net/avatar/2026/05/06/w5W66z_1778106583.png",
+  "King Strong": "https://got-global-avatar.akamaized.net/avatar-dev/2023/07/17/1001.png",
+  "Esrarengiz": "https://got-global-avatar.akamaized.net/avatar/2026/05/05/Gx4ky8_1777996107.png"
 };
 
 const pieData = [
@@ -99,9 +132,66 @@ const HeroCard = ({ name }: { name: string }) => {
 };
 
 export default function Home() {
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    
+    const handleInteraction = () => {
+      if (audio && !isPlaying) {
+        audio.play().then(() => {
+          setIsPlaying(true);
+        }).catch((e) => {
+          console.log("Autoplay prevented:", e);
+        });
+      }
+    };
+
+    // Listen for any interaction to start audio (due to browser autoplay policies)
+    window.addEventListener('click', handleInteraction, { once: true });
+    window.addEventListener('touchstart', handleInteraction, { once: true });
+    window.addEventListener('keydown', handleInteraction, { once: true });
+
+    if (audio) {
+      // Try to autoplay once mounted
+      audio.play().then(() => {
+        setIsPlaying(true);
+      }).catch((e) => {
+        console.log("Autoplay prevented:", e);
+      });
+    }
+
+    return () => {
+      window.removeEventListener('click', handleInteraction);
+      window.removeEventListener('touchstart', handleInteraction);
+      window.removeEventListener('keydown', handleInteraction);
+    };
+  }, [isPlaying]);
+
+  const togglePlay = () => {
+    const audio = audioRef.current;
+    if (audio) {
+      if (isPlaying) {
+        audio.pause();
+        setIsPlaying(false);
+      } else {
+        audio.play().then(() => setIsPlaying(true)).catch(console.error);
+      }
+    }
+  };
+
   return (
     <BackgroundTheme>
       <main className="min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pb-20 pt-16 sm:pt-24 lg:pt-32">
+        <audio 
+          ref={audioRef} 
+          src="https://rr1---sn-nv47lnsr.googlevideo.com/videoplayback?expire=1778230049&ei=wU79abmCIq2YhcIP1fruqQM&ip=31.59.33.175&id=o-AI6PpQbbe4pidGSZnp_2V4con2YujP8eGc9VjeFy0HF3&itag=140&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&rms=au%2Cau&bui=AbKmrwr0c8Tc1u4DVSp3pjINdFtN7NEJVPqYsRyR2YVXZzgz6ECxCQynTF1dIiLSaojFaFtgD9xfmls7&spc=96XrvywA2m7nhMfTEY1_ybLC3q-uY3bcrKMJNeRSznlo&vprv=1&svpuc=1&mime=audio%2Fmp4&rqh=1&gir=yes&clen=920346&dur=56.819&lmt=1732370456018509&keepalive=yes&fexp=51565116,51565681&c=ANDROID_VR&txp=5432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AHEqNM4wRQIhAK4Tejvvw42cDlU9ZMgvid_DuU85EQbjGznLjjHqtCBdAiAlJPATCZ0Ojj-QASZf8EMTOaWBWLeJ4fWk1xR86Pn1Mg%3D%3D&redirect_counter=1&rm=sn-5hnezl7l&rrc=104&req_id=e175d7502021a3ee&cms_redirect=yes&cmsv=e&cps=0&ipbypass=yes&met=1778208452,&mh=mS&mip=2a09:bac5:58ba:d2d::150:a0&mm=31&mn=sn-nv47lnsr&ms=au&mt=1778205421&mv=m&mvi=1&pl=45&lsparams=cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms&lsig=APaTxxMwRQIgVL_9KV4wAkBSNCUujnLR_uY4YLreQylpNYKFrzqdqVgCIQCu7MX-oHST7NdoIktUsuoAlFLw302KuK8Z2WYYEpHRvQ%3D%3D" 
+          loop 
+          autoPlay
+          style={{ display: 'none' }}
+        />
+
         <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center flex flex-col items-center h-full w-full">
           <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -199,24 +289,62 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-3 bg-cyan-500/5 rounded-xl p-4 sm:p-5 border border-cyan-500/10 hover:bg-cyan-500/10 transition-colors duration-300 shadow-inner mb-4">
+                    <div className="flex flex-col gap-3 bg-amber-500/5 rounded-xl p-4 sm:p-5 border border-amber-500/10 hover:bg-amber-500/10 transition-colors duration-300 shadow-inner mb-4">
                       <div className="flex items-center gap-3">
-                         <div className="p-2.5 rounded-lg bg-cyan-500/20 text-cyan-500 shrink-0 shadow-[0_0_10px_rgba(34,211,238,0.3)]">
-                           <Crown className="w-5 h-5" />
+                         <div className="p-2.5 rounded-lg bg-amber-500/20 text-amber-400 shrink-0 shadow-[0_0_10px_rgba(251,191,36,0.3)]">
+                           <ListChecks className="w-5 h-5" />
                          </div>
-                         <h3 className="text-lg sm:text-xl font-bold text-cyan-100">القائد الأساسي</h3>
+                         <h3 className="text-lg sm:text-xl font-bold text-amber-100">تعليمات هامة للمعركة</h3>
                       </div>
-                      <div className="mt-1 space-y-3 pr-3 border-r-2 border-cyan-500/30 mr-2 flex flex-col sm:flex-row sm:items-center gap-4">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-xl bg-gradient-to-br from-cyan-500 to-cyan-700 flex items-center justify-center shadow-lg border border-white/20 overflow-hidden shrink-0 mx-auto sm:mx-0">
-                          {characterAvatars["no time"] ? (
-                            <img src={characterAvatars["no time"]} alt="no time" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                          ) : (
-                            <span className="text-xl font-bold text-white">N</span>
-                          )}
-                        </div>
-                        <p className="text-base sm:text-lg text-gray-200 leading-relaxed font-medium text-center sm:text-right">
-                          الاعتماد الأكبر في هذه المعركة سيكون على <span className="font-black text-cyan-400 text-xl tracking-wider">no time</span>.
-                        </p>
+                      <div className="mt-1 pr-3 border-r-[3px] border-amber-500/30 mr-2">
+                        <ul className="space-y-4">
+                           <li className="flex items-start gap-3">
+                              <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                              <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                                الانتباه للتعليمات والتواصل وقت المعركة.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-3">
+                              <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                              <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                                ممنوع ارسال قوات مستوى 8 او اقل.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-3">
+                              <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                              <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                                استمر في التعزيزات والشفاء دوماً عندما تكون في قلعة الملك او الابراج.
+                              </p>
+                           </li>
+                           <li className="flex flex-col gap-2">
+                              <div className="flex items-start gap-3">
+                                <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                                <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                                  شفاء القوات يكون من خلال مساعدة التحالف.
+                                </p>
+                              </div>
+                              <div className="flex items-center gap-2 mr-5">
+                                <p className="text-xs sm:text-sm text-gray-400 font-medium">
+                                  ملاحظة: يوصي بمشاهدة هذا الفيديو للتعلم:
+                                </p>
+                                <a 
+                                  href="https://youtube.com/shorts/vvFvbhnJcvM?si=kXI1KaBec4xMueTs" 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="flex items-center justify-center shrink-0 w-8 h-8 bg-red-600/90 text-white hover:bg-red-500 hover:scale-105 rounded-full transition-all shadow-md"
+                                  title="مشاهدة الفيديو"
+                                >
+                                  <Youtube className="w-4 h-4 ml-0.5" />
+                                </a>
+                              </div>
+                           </li>
+                           <li className="flex items-start gap-3">
+                              <div className="w-2 h-2 rounded-full bg-amber-400 mt-2 shrink-0 shadow-[0_0_5px_rgba(251,191,36,0.8)]" />
+                              <p className="text-sm sm:text-base text-gray-200 leading-relaxed font-medium">
+                                <span className="font-bold text-amber-400">استبدال الابطال:</span> بعد الهجوم الناجح ارسل جورودن او هاورد للدفاع / قبل وصوله بقليل اسحب تشينكو ليدخل بطل دفاعي.
+                              </p>
+                           </li>
+                        </ul>
                       </div>
                     </div>
 
@@ -227,16 +355,40 @@ export default function Home() {
                          </div>
                          <h3 className="text-lg sm:text-xl font-bold text-red-100">الخصوم <span className="text-gray-400 font-medium text-sm ml-2">(التحالفات المعادية)</span></h3>
                       </div>
-                      <div className="mt-1 space-y-3 pr-3 border-r-2 border-red-500/30 mr-2">
-                        <div className="flex flex-col gap-1">
-                          <p className="text-base sm:text-lg text-gray-200 leading-relaxed font-medium">
-                            نواجه في هذه المعركة كلاً من <span className="font-black text-red-400 tracking-wider">KGM</span> و <span className="font-black text-red-400 tracking-wider">DSN</span>
-                          </p>
+                      <div className="mt-4 space-y-6">
+                        {/* DSN Alliance */}
+                        <div>
+                           <h4 className="text-xl font-black text-red-400 mb-3 tracking-wider flex items-center pr-3 border-r-[3px] border-red-500/50">
+                             تحالف DSN
+                           </h4>
+                           <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 w-full mx-auto sm:mx-0">
+                              <CharacterCard name="Ymfalex115" gradient="from-red-600 to-red-800" size="small" />
+                              <CharacterCard name="hank" gradient="from-red-600 to-red-800" size="small" />
+                           </div>
+                           <p className="mt-3 text-sm sm:text-base text-gray-300 font-medium">
+                             يمتلكون <span className="text-red-400 font-bold">15 شخص</span> لديه قوات T9.
+                           </p>
                         </div>
+
+                        {/* KGM Alliance */}
+                        <div>
+                           <h4 className="text-xl font-black text-red-400 mb-3 tracking-wider flex items-center pr-3 border-r-[3px] border-red-500/50">
+                             تحالف KGM
+                           </h4>
+                           <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 w-full mx-auto sm:mx-0">
+                              <CharacterCard name="Idle" gradient="from-red-600 to-red-800" size="small" />
+                              <CharacterCard name="King Strong" gradient="from-red-600 to-red-800" size="small" />
+                              <CharacterCard name="Esrarengiz" gradient="from-red-600 to-red-800" size="small" />
+                           </div>
+                           <p className="mt-3 text-sm sm:text-base text-gray-300 font-medium">
+                             يمتلكون <span className="text-red-400 font-bold">21 شخص</span> لديه قوات T9.
+                           </p>
+                        </div>
+
                         <div className="flex items-start gap-3 bg-black/20 p-3 rounded-lg border border-red-500/20">
                            <AlertTriangle className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
                            <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
-                             الحوت الأقوى ضدنا هو <span className="font-bold text-orange-400">Ymfalex115</span>، وهو الخطر الأكبر ويجب التعاون للتصدي لهجماته .
+                             هؤلاء هم الحيتان الأقوى ضدنا، وهم الخطر الأكبر ويجب التعاون للتصدي لهجماتهم.
                            </p>
                         </div>
                       </div>
@@ -292,7 +444,20 @@ export default function Home() {
                         <h3 className="text-lg font-bold text-gray-100">داعمين قلعة الملك الأساسي</h3>
                       </div>
                       <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 w-full mx-auto sm:mx-0">
-                        {mainSupporters.map(name => (
+                        {kingsSupporters.map(name => (
+                          <CharacterCard key={name} name={name} gradient="from-gray-600 to-gray-800" size="small" />
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* section 4 */}
+                    <div className="pt-4 border-t border-white/10">
+                      <div className="flex items-center gap-2 mb-4 justify-center sm:justify-start">
+                        <Shield className="w-5 h-5 text-gray-400" />
+                        <h3 className="text-lg font-bold text-gray-100">داعمين الأبراج</h3>
+                      </div>
+                      <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-7 gap-2 w-full mx-auto sm:mx-0">
+                        {towerSupporters.map(name => (
                           <CharacterCard key={name} name={name} gradient="from-gray-600 to-gray-800" size="small" />
                         ))}
                       </div>
@@ -460,10 +625,27 @@ export default function Home() {
                       <div className="p-2 sm:p-3 rounded-lg bg-blue-500/20 text-blue-400 shrink-0 mt-1 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                         <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
-                      <div>
-                        <p className="text-sm sm:text-base text-gray-300 leading-relaxed mt-1">
-                          قادة الحرب ومن يمكنه على تشغيل بافات تعزيز القوة وخفض قوة العدو <span className="font-bold text-blue-400">يجب تشغيل ذلك</span> لزيادة قدرتنا للهجوم والدفاع.
-                        </p>
+                      <div className="w-full">
+                        <ul className="space-y-3 mt-1">
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                على <span className="font-bold text-blue-400">قادة الحرب</span> وجميع من يمتلك الصلاحية تشغيل بافات تعزيز القوة.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-red-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                تفعيل قدرات <span className="font-bold text-red-400">خفض قوة العدو</span> (Debuffs) لإضعاف خصومنا.
+                              </p>
+                           </li>
+                           <li className="flex items-start gap-2">
+                              <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-2 shrink-0" />
+                              <p className="text-sm sm:text-base text-gray-300 leading-relaxed font-medium">
+                                هذا الإجراء <span className="font-bold text-green-400">أساسي وإلزامي</span> لرفع كفاءتنا العسكرية في الهجوم والدفاع.
+                              </p>
+                           </li>
+                        </ul>
                       </div>
                     </div>
                     
@@ -711,9 +893,20 @@ export default function Home() {
                               </div>
                               <div className="min-w-0">
                                   <h4 className="text-sm sm:text-lg font-bold text-orange-100 mb-1 sm:mb-2 leading-tight">توقيت الهجوم المباغت (كيف؟)</h4>
-                                  <p className="text-xs sm:text-base text-gray-300 leading-relaxed">
-                                      عند تجهيز هجوم ضد <span className="font-bold text-emerald-400">بيرسيفال</span> من خلال 2 رالي، نرى العد التنازلي. عندما يقترب رالي <span className="font-bold text-orange-400">Ymfalex115</span> من النصف أو <span className="font-bold text-red-400">30 ثانية</span> قبل الوصول، يعود <span className="font-bold text-cyan-400">no time</span> إلى قلعته ليستعد لبدء هجوم فردي غير متوقع.
-                                  </p>
+                                  <ul className="space-y-2 mt-2 border-r-2 border-orange-500/30 pr-3 mr-2">
+                                      <li className="flex items-start gap-2">
+                                         <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(249,115,22,0.8)]" />
+                                         <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                             عند تجهيز هجوم ضد <span className="font-bold text-emerald-400">بيرسيفالي</span> من خلال 2 رالي نرى العد التنازلي.
+                                         </p>
+                                      </li>
+                                      <li className="flex items-start gap-2">
+                                         <div className="w-1.5 h-1.5 rounded-full bg-orange-500 mt-1.5 sm:mt-2 shrink-0 shadow-[0_0_5px_rgba(249,115,22,0.8)]" />
+                                         <p className="text-xs sm:text-base text-gray-300 leading-relaxed font-medium">
+                                             عندما يقترب رالي <span className="font-bold text-orange-400">يمفالكس</span> من <span className="font-bold text-red-400">30 ثانية</span> يعود <span className="font-bold text-cyan-400">نو تايم</span> إلى قلعته ليستعد لبدء هجوم فردي مضاد غير متوقع.
+                                         </p>
+                                      </li>
+                                   </ul>
                               </div>
                           </div>
 
