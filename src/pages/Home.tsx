@@ -172,31 +172,30 @@ export default function Home() {
     }
 
     const handleFirstInteraction = () => {
-      if (hasInteractedRef.current) return;
-      hasInteractedRef.current = true;
-
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-      window.removeEventListener('keydown', handleFirstInteraction);
-
-      if (isYoutubeModalOpen) return;
+      if (hasInteractedRef.current || isYoutubeModalOpen) return;
       
       if (audioRef.current && audioRef.current.paused) {
         audioRef.current.play().then(() => {
           setIsPlaying(true);
-        }).catch(console.error);
+          hasInteractedRef.current = true;
+          window.removeEventListener('click', handleFirstInteraction);
+          window.removeEventListener('touchend', handleFirstInteraction);
+          window.removeEventListener('keydown', handleFirstInteraction);
+        }).catch((e) => {
+           console.log("Audio play failed on interaction:", e);
+        });
       }
     };
 
     if (!hasInteractedRef.current) {
       window.addEventListener('click', handleFirstInteraction);
-      window.addEventListener('touchstart', handleFirstInteraction);
+      window.addEventListener('touchend', handleFirstInteraction);
       window.addEventListener('keydown', handleFirstInteraction);
     }
 
     return () => {
       window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('touchend', handleFirstInteraction);
       window.removeEventListener('keydown', handleFirstInteraction);
     };
   }, [isYoutubeModalOpen]);
