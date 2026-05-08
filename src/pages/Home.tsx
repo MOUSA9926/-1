@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Shield, Clock, Target, Crown, Building2, Users, Swords, Zap, AlertTriangle, ArrowDown, Youtube, ListChecks, Music, Pause, Play } from "lucide-react";
+import { Shield, Clock, Target, Crown, Building2, Users, Swords, Zap, AlertTriangle, ArrowDown, Youtube, ListChecks, Music, Pause, Play, X } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { WolfEye, BackgroundTheme } from "../components/BackgroundTheme";
 
@@ -134,11 +134,36 @@ const HeroCard = ({ name }: { name: string }) => {
 export default function Home() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isYoutubeModalOpen, setIsYoutubeModalOpen] = useState(false);
+  const wasPlayingBeforeModal = useRef(false);
+
+  const openYoutubeModal = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsYoutubeModalOpen(true);
+    if (audioRef.current) {
+      if (isPlaying) {
+        wasPlayingBeforeModal.current = true;
+      }
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  };
+
+  const closeYoutubeModal = () => {
+    setIsYoutubeModalOpen(false);
+    if (wasPlayingBeforeModal.current && audioRef.current) {
+      audioRef.current.play().then(() => setIsPlaying(true)).catch(console.error);
+      wasPlayingBeforeModal.current = false;
+    }
+  };
 
   useEffect(() => {
     const audio = audioRef.current;
     
     const handleInteraction = () => {
+      if (isYoutubeModalOpen) return;
+      
       if (audio && !isPlaying) {
         audio.play().then(() => {
           setIsPlaying(true);
@@ -153,7 +178,7 @@ export default function Home() {
     window.addEventListener('touchstart', handleInteraction, { once: true });
     window.addEventListener('keydown', handleInteraction, { once: true });
 
-    if (audio) {
+    if (audio && !isYoutubeModalOpen) {
       // Try to autoplay once mounted
       audio.play().then(() => {
         setIsPlaying(true);
@@ -167,7 +192,7 @@ export default function Home() {
       window.removeEventListener('touchstart', handleInteraction);
       window.removeEventListener('keydown', handleInteraction);
     };
-  }, [isPlaying]);
+  }, [isPlaying, isYoutubeModalOpen]);
 
   const togglePlay = () => {
     const audio = audioRef.current;
@@ -327,15 +352,13 @@ export default function Home() {
                                 <p className="text-xs sm:text-sm text-gray-400 font-medium">
                                   ملاحظة: يوصي بمشاهدة هذا الفيديو للتعلم:
                                 </p>
-                                <a 
-                                  href="https://youtube.com/shorts/vvFvbhnJcvM?si=kXI1KaBec4xMueTs" 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
+                                <button 
+                                  onClick={openYoutubeModal} 
                                   className="flex items-center justify-center shrink-0 w-8 h-8 bg-red-600/90 text-white hover:bg-red-500 hover:scale-105 rounded-full transition-all shadow-md"
                                   title="مشاهدة الفيديو"
                                 >
                                   <Youtube className="w-4 h-4 ml-0.5" />
-                                </a>
+                                </button>
                               </div>
                            </li>
                            <li className="flex items-start gap-3">
@@ -1279,6 +1302,33 @@ export default function Home() {
           </motion.div>
         </div>
       </main>
+
+      {/* YouTube Modal */}
+      {isYoutubeModalOpen && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+          <div className="relative w-full max-w-sm sm:max-w-md bg-[#121316] rounded-2xl border border-white/10 overflow-hidden shadow-2xl flex flex-col">
+            <div className="flex items-center justify-between p-4 border-b border-white/10 bg-white/5">
+              <h3 className="text-white font-bold text-lg">فيديو تعليمي</h3>
+              <button 
+                onClick={closeYoutubeModal} 
+                className="p-1.5 rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-colors"
+                title="إغلاق"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="relative w-full aspect-[9/16] bg-black">
+              <iframe
+                src="https://www.youtube.com/embed/vvFvbhnJcvM?autoplay=1"
+                title="YouTube short player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                className="absolute inset-0 w-full h-full border-0"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </BackgroundTheme>
   );
 }
