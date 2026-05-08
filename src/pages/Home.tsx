@@ -160,6 +160,18 @@ export default function Home() {
   };
 
   useEffect(() => {
+    if (isYoutubeModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isYoutubeModalOpen]);
+
+  useEffect(() => {
     const audio = audioRef.current;
     
     if (audio && !hasInteractedRef.current && !isYoutubeModalOpen) {
@@ -262,10 +274,10 @@ export default function Home() {
                 <WolfEye theme="ice" position="left" />
               </div>
               
-              <div className="flex items-center justify-center h-28 w-28 sm:h-36 sm:w-36 md:h-44 md:w-44 rounded-full bg-black/40 border border-white/10 backdrop-blur-md relative overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] z-10 mx-2 sm:mx-6">
+              <div className="flex items-center justify-center h-28 w-28 sm:h-36 sm:w-36 md:h-44 md:w-44 rounded-full bg-black/40 border border-white/10 backdrop-blur-md relative overflow-hidden shadow-[0_0_40px_rgba(0,0,0,0.5)] z-10 mx-2 sm:mx-6 p-2">
                 <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-orange-500/20" />
                 <div className="absolute left-0 top-0 bottom-0 w-1/2 bg-cyan-500/20" />
-                <Shield className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 text-white relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
+                <img src="https://i.ibb.co/xtnrGnHx/Picsart-26-05-08-06-54-28-598.png" alt="شعار التحالف" className="w-full h-full object-contain relative z-10 drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]" />
               </div>
 
               <div className="translate-y-4 sm:translate-y-8 md:translate-y-12">
