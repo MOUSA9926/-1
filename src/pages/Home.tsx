@@ -136,6 +136,7 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isYoutubeModalOpen, setIsYoutubeModalOpen] = useState(false);
   const wasPlayingBeforeModal = useRef(false);
+  const hasInteractedRef = useRef(false);
 
   const openYoutubeModal = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -161,40 +162,47 @@ export default function Home() {
   useEffect(() => {
     const audio = audioRef.current;
     
-    const handleInteraction = () => {
-      if (isYoutubeModalOpen) return;
-      
-      if (audio && !isPlaying) {
-        audio.play().then(() => {
-          setIsPlaying(true);
-        }).catch((e) => {
-          console.log("Autoplay prevented:", e);
-        });
-      }
-    };
-
-    // Listen for any interaction to start audio (due to browser autoplay policies)
-    window.addEventListener('click', handleInteraction, { once: true });
-    window.addEventListener('touchstart', handleInteraction, { once: true });
-    window.addEventListener('keydown', handleInteraction, { once: true });
-
-    if (audio && !isYoutubeModalOpen) {
-      // Try to autoplay once mounted
+    if (audio && !hasInteractedRef.current && !isYoutubeModalOpen) {
       audio.play().then(() => {
         setIsPlaying(true);
-      }).catch((e) => {
-        console.log("Autoplay prevented:", e);
+        hasInteractedRef.current = true;
+      }).catch(() => {
+        // Autoplay prevented by browser
       });
     }
 
-    return () => {
-      window.removeEventListener('click', handleInteraction);
-      window.removeEventListener('touchstart', handleInteraction);
-      window.removeEventListener('keydown', handleInteraction);
+    const handleFirstInteraction = () => {
+      if (hasInteractedRef.current) return;
+      hasInteractedRef.current = true;
+
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+
+      if (isYoutubeModalOpen) return;
+      
+      if (audioRef.current && audioRef.current.paused) {
+        audioRef.current.play().then(() => {
+          setIsPlaying(true);
+        }).catch(console.error);
+      }
     };
-  }, [isPlaying, isYoutubeModalOpen]);
+
+    if (!hasInteractedRef.current) {
+      window.addEventListener('click', handleFirstInteraction);
+      window.addEventListener('touchstart', handleFirstInteraction);
+      window.addEventListener('keydown', handleFirstInteraction);
+    }
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, [isYoutubeModalOpen]);
 
   const togglePlay = () => {
+    hasInteractedRef.current = true;
     const audio = audioRef.current;
     if (audio) {
       if (isPlaying) {
@@ -209,6 +217,32 @@ export default function Home() {
   return (
     <BackgroundTheme>
       <main className="min-h-screen flex flex-col items-center justify-start relative overflow-x-hidden pb-20 pt-16 sm:pt-24 lg:pt-32">
+        
+        {/* Floating Player Bar */}
+        <div className="fixed top-0 inset-x-0 z-[60] bg-[#080b0f]/90 backdrop-blur-md border-b border-white/5 shadow-sm">
+          <div className="w-full h-8 flex items-center justify-center mx-auto max-w-7xl px-4 lg:px-8">
+            <button 
+              onClick={togglePlay}
+              className="flex items-center gap-2 group w-full h-full"
+              title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+            >
+              <div className={`transition-all duration-300 ${isPlaying ? 'text-cyan-400' : 'text-gray-400 group-hover:text-white'}`}>
+                {isPlaying ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5" />}
+              </div>
+              <span className="text-xs font-medium text-gray-400 group-hover:text-gray-200 transition-colors duration-300">
+                {isPlaying ? 'الموسيقى' : 'تشغيل الموسيقى'}
+              </span>
+              {isPlaying && (
+                <div className="flex items-end h-2.5 gap-[2px] mr-2 opacity-80">
+                  <motion.div animate={{ height: ["40%", "100%", "40%"] }} transition={{ repeat: Infinity, duration: 1, ease: 'easeInOut' }} className="w-0.5 bg-cyan-400 rounded-none" />
+                  <motion.div animate={{ height: ["100%", "30%", "100%"] }} transition={{ repeat: Infinity, duration: 0.8, ease: 'easeInOut' }} className="w-0.5 bg-cyan-400 rounded-none" />
+                  <motion.div animate={{ height: ["60%", "100%", "60%"] }} transition={{ repeat: Infinity, duration: 1.2, ease: 'easeInOut' }} className="w-0.5 bg-cyan-400 rounded-none" />
+                </div>
+              )}
+            </button>
+          </div>
+        </div>
+
         <audio 
           ref={audioRef} 
           src="https://rr1---sn-nv47lnsr.googlevideo.com/videoplayback?expire=1778230049&ei=wU79abmCIq2YhcIP1fruqQM&ip=31.59.33.175&id=o-AI6PpQbbe4pidGSZnp_2V4con2YujP8eGc9VjeFy0HF3&itag=140&source=youtube&requiressl=yes&xpc=EgVo2aDSNQ%3D%3D&rms=au%2Cau&bui=AbKmrwr0c8Tc1u4DVSp3pjINdFtN7NEJVPqYsRyR2YVXZzgz6ECxCQynTF1dIiLSaojFaFtgD9xfmls7&spc=96XrvywA2m7nhMfTEY1_ybLC3q-uY3bcrKMJNeRSznlo&vprv=1&svpuc=1&mime=audio%2Fmp4&rqh=1&gir=yes&clen=920346&dur=56.819&lmt=1732370456018509&keepalive=yes&fexp=51565116,51565681&c=ANDROID_VR&txp=5432434&sparams=expire%2Cei%2Cip%2Cid%2Citag%2Csource%2Crequiressl%2Cxpc%2Cbui%2Cspc%2Cvprv%2Csvpuc%2Cmime%2Crqh%2Cgir%2Cclen%2Cdur%2Clmt&sig=AHEqNM4wRQIhAK4Tejvvw42cDlU9ZMgvid_DuU85EQbjGznLjjHqtCBdAiAlJPATCZ0Ojj-QASZf8EMTOaWBWLeJ4fWk1xR86Pn1Mg%3D%3D&redirect_counter=1&rm=sn-5hnezl7l&rrc=104&req_id=e175d7502021a3ee&cms_redirect=yes&cmsv=e&cps=0&ipbypass=yes&met=1778208452,&mh=mS&mip=2a09:bac5:58ba:d2d::150:a0&mm=31&mn=sn-nv47lnsr&ms=au&mt=1778205421&mv=m&mvi=1&pl=45&lsparams=cps,ipbypass,met,mh,mip,mm,mn,ms,mv,mvi,pl,rms&lsig=APaTxxMwRQIgVL_9KV4wAkBSNCUujnLR_uY4YLreQylpNYKFrzqdqVgCIQCu7MX-oHST7NdoIktUsuoAlFLw302KuK8Z2WYYEpHRvQ%3D%3D" 
